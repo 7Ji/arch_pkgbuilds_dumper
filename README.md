@@ -9,5 +9,5 @@
     As of writing the count of all PKGBUILDs is 12467
 2. Clone the repos or just dump the PKGBUILDs, it's up to you, but a simple script is available at `clone_all.bash`
     ```
-    bash -e clone_all_bare.bash
+    bash clone_all_bare.bash
     ```
