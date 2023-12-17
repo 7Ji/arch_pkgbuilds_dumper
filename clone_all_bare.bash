@@ -12,4 +12,8 @@ while read -r line; do
         rm -rf "${repo}"
         git clone --mirror https://gitlab.archlinux.org/archlinux/packaging/packages/"${line}".git "${repo}"
     fi
+    if [[ $? != 0 ]]; then
+        echo 'Something went wrong, wait for 1 minute'
+        sleep 60
+    fi
 done < pkgbuilds.list
