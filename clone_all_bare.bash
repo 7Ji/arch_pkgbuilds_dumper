@@ -2,7 +2,7 @@
 mkdir -p repos
 while read -r line; do
     repo=repos/"${line}".git
-    if [[ -e "${repo}" ]]; then
+    if [[ "${update_repo}" && -e "${repo}" ]]; then
         echo "Updating '${line}'"
         git --git-dir "${repo}" remote update
     else
