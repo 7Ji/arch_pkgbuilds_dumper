@@ -2,7 +2,7 @@
 
 1. Run the `get_list.py` script to get a sorted, dedupped list of all PKGBUILDs
     ```
-    python get_list.py > pkgbuilds.list
+    python get_list.py
     ```
     Each of the line represents a repo under `https://gitlab.archlinux.org/archlinux/packaging/packages`
 

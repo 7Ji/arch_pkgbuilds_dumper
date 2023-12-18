@@ -29,35 +29,37 @@ class GitLabAPI:
         # 0x1000 pages allows max 40960 projects, more than enough
         try:
             for i in range(0x1000): 
-                print(f"=> Parsing page {i}", file=sys.stderr)
+                print(f"=> Parsing page {i}")
                 for project in json.loads(response.content):
-                    name = project['name']
-                    print(f" -> Adding '{name}'", file=sys.stderr)
-                    projects.append(name)
+                    path = project['path']
+                    print(f" -> Adding '{path}'")
+                    projects.append(path)
                 next_page = response.headers['X-Next-Page']
                 if next_page is not None and next_page != '':
-                    print(f"=> Next page {next_page}", file=sys.stderr)
+                    print(f"=> Next page {next_page}")
                     response = self.get(f"/groups/{id}/projects?per_page=100&page={next_page}")
                 else:
                     break
         except KeyboardInterrupt:
-            print("Exit prematurely, saving already retrived results", file=sys.stderr)
+            print("Exit prematurely, saving already retrived results")
         projects.sort()
-        dedupped = []
-        last = ""
-        for project in projects:
-            if project != last:
-                dedupped.append(project)
-                last = project
-        return dedupped
+        return projects
+        # dedupped = []
+        # last = ""
+        # for project in projects:
+        #     if project != last:
+        #         dedupped.append(project)
+        #         last = project
+        # return dedupped
 
 def dumper():
     api = GitLabAPI('https://gitlab.archlinux.org/api/v4')
     id = api.group_id('archlinux/packaging/packages')
     projects = api.group_projects(id)
-    # Print to stdout
-    for project in projects:
-        print(project)
+    with open('pkgbuilds.list', 'w') as f:
+        for project in projects:
+            f.write(project)
+            f.write('\n')
 
 if __name__ == '__main__':
     dumper()

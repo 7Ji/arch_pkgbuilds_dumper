@@ -15,5 +15,7 @@ while read -r line; do
     if [[ $? != 0 ]]; then
         echo 'Something went wrong, wait for 1 minute'
         sleep 60
+    elif [[ "${update_repo}" ]]; then
+        sleep 1
     fi
 done < pkgbuilds.list
