@@ -20,12 +20,16 @@ def split_list(projects: list[str]) -> list[list[str]]:
 
 def extract(projects: list[str]):
     for project in projects:
-        r = subprocess.run(('git', '--git-dir', f'repos/{project}.git', 'cat-file', 'blob', 'HEAD:PKGBUILD'), stdout=subprocess.PIPE)
-        if r.returncode != 0:
-            print(f"Failed to extract '{project}'")
+        for ref in ('HEAD', 'main', 'master'):
+            r = subprocess.run(('git', '--git-dir', f'repos/{project}.git', 'cat-file', 'blob', f'{ref}:PKGBUILD'), stdout=subprocess.PIPE)
+            if r.returncode != 0:
+                print(f"Failed to extract PKGBUILD from '{ref}' of '{project}'")
+            else:
+                with open(f'pkgbuilds/{project}', 'wb') as f:
+                    f.write(r.stdout)
+                break
         else:
-            with open(f'pkgbuilds/{project}', 'wb') as f:
-                f.write(r.stdout)
+            print(f"Failed to extract PKGBUILD from all possible refs of '{project}'")
 
 if __name__ == '__main__':
     shutil.rmtree('pkgbuilds', True)
