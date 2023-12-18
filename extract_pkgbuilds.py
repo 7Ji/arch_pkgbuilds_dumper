@@ -20,7 +20,7 @@ def split_list(projects: list[str]) -> list[list[str]]:
 
 def extract(projects: list[str]):
     for project in projects:
-        r = subprocess.run(('git', '--git-dir', f'repos/{project}.git', 'cat-file', 'blob', 'HEAD:PKGBUILD'))
+        r = subprocess.run(('git', '--git-dir', f'repos/{project}.git', 'cat-file', 'blob', 'HEAD:PKGBUILD'), stdout=subprocess.PIPE)
         if r.returncode != 0:
             print(f"Failed to extract '{project}'")
         else:
@@ -29,7 +29,7 @@ def extract(projects: list[str]):
 
 if __name__ == '__main__':
     shutil.rmtree('pkgbuilds', True)
-    os.mkdir('pkgbuilds', mode=0o644)
+    os.mkdir('pkgbuilds', mode=0o755)
     threads_projects = split_list(get_list())
     threads = []
     for thread_projects in threads_projects:
